@@ -1,5 +1,7 @@
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
+//const { utils } = require("stylelint");
+
 {
   'use strict';
 
@@ -40,13 +42,13 @@
     },
   };
 
-  const settings = {
-    amountWidget: {
-      defaultValue: 1,
-      defaultMin: 1,
-      defaultMax: 9,
-    }
-  };
+  // const settings = {
+  //   amountWidget: {
+  //     defaultValue: 1,
+  //     defaultMin: 1,
+  //     defaultMax: 9,
+  //   }
+  // };
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
@@ -92,6 +94,7 @@
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
     }
     
     initAccordion() {
@@ -145,8 +148,6 @@
         thisProduct.processOrder();
       });
     }
-
-
     
     processOrder() {
       const thisProduct = this;
@@ -166,7 +167,9 @@
         for(let optionId in param.options) {
           // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
+          // find image with class .paramId-optionId
           const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+          // setting the const in order to check if there is param with a name of paramId in formData and if it includes optionId
           const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
 
           if(optionImage){
@@ -177,11 +180,10 @@
               optionImage.classList.remove(classNames.menuProduct.wrapperActive);
             }
           }
-            
-          // check if there is param with a name of paramId in formData and if it includes optionId
+          // check if there is param with a name of paramId in formData and if it includes optionId 
           if(optionSelected) {
             // check if the option is not default
-            if(!option.default == true) {
+            if(option.default !== true) {
               // add option price to price variable
               price += option.price;
             }
@@ -200,12 +202,60 @@
       // update calculated price in the HTML
       thisProduct.priceElem.innerHTML = price;
     }
+    
+    initAmountWidget(){
+      const thisProduct = this;
+
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+    }
+  }
+
+  class AmountWidget{
+    constructor(element){
+      const thisWidget = this;
+
+      thisWidget.setValue(thisWidget.input.value);
+      thisWidget.getElements(element);
+
+      console.log('AmountWidget:', thisWidget);
+      console.log('constructor arguments:', element);
+    }
+
+    getElements(element){
+      const thisWidget = this;
+    
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+    }
+
+    setValue(value){
+      const thisWidget = this;
+
+      const newValue = parseInt(value);
+
+      /* TO DO: Add validation */
+      if(thisWidget.value !== newValue && !isNaN(newValue)) {
+        thisWidget.value = newValue;
+      }
+      console.log(newValue);
+
+      thisWidget.value = newValue;
+      thisWidget.input.value = thisWidget.value;
+    
+    }
+
+    initActions(){
+      
+    }
+
   }
 
   const app = {
     initMenu: function() {
       const thisApp = this;
-      console.log('thisApp.data:', thisApp.data);
+      //console.log('thisApp.data:', thisApp.data);
 
       for (let productData in thisApp.data.products){
         new Product(productData, thisApp.data.products[productData]);
@@ -221,18 +271,16 @@
 
     init: function(){
       const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
+      // console.log('*** App starting ***');
+      // console.log('thisApp:', thisApp);
+      // console.log('classNames:', classNames);
+      // console.log('settings:', settings);
+      // console.log('templates:', templates);
 
       thisApp.initData();
       thisApp.initMenu();
     },
   };
-
-
 
   app.init();
 }
