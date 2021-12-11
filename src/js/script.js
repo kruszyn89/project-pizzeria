@@ -65,6 +65,7 @@
       thisProduct.getElements();
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
+      thisProduct.initAmountWidget();
       thisProduct.processOrder();
     }
     
@@ -148,7 +149,13 @@
         thisProduct.processOrder();
       });
     }
-    
+
+    initAmountWidget(){
+      const thisProduct = this;
+
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+    }
+
     processOrder() {
       const thisProduct = this;
 
@@ -203,22 +210,18 @@
       thisProduct.priceElem.innerHTML = price;
     }
     
-    initAmountWidget(){
-      const thisProduct = this;
-
-      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
-    }
   }
 
   class AmountWidget{
     constructor(element){
       const thisWidget = this;
 
-      thisWidget.setValue(thisWidget.input.value);
-      thisWidget.getElements(element);
-
       console.log('AmountWidget:', thisWidget);
       console.log('constructor arguments:', element);
+
+      thisWidget.getElements(element);
+      thisWidget.setValue(thisWidget.input.value);
+      
     }
 
     getElements(element){
@@ -234,20 +237,18 @@
       const thisWidget = this;
 
       const newValue = parseInt(value);
-
+      
       /* TO DO: Add validation */
       if(thisWidget.value !== newValue && !isNaN(newValue)) {
         thisWidget.value = newValue;
       }
-      console.log(newValue);
 
       thisWidget.value = newValue;
       thisWidget.input.value = thisWidget.value;
-    
     }
 
     initActions(){
-      
+
     }
 
   }
