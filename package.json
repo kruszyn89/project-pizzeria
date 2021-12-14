@@ -12,7 +12,6 @@
         "test": "npm-run-all test:*",
         "test:html": "html-validate src/*.html",
         "test:js": "eslint src/js/",
-        "test:scss": "stylelint src/sass/",
         "build": "npm-run-all build:* test",
         "build:clean": "rimraf dist && mkdirp dist",
         "build:copy": "copyfiles -a -u 1 -e \"**/sass/**/*\" -e \"**/.gitkeep\" \"src/**/*\" dist",
@@ -28,7 +27,9 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "dependencies": {},
+    "dependencies": {
+        "yargs": "^17.3.0"
+    },
     "devDependencies": {
         "autoprefixer": "^10.2.4",
         "browser-sync": "^2.26.3",
@@ -43,8 +44,8 @@
         "postcss": "^8.2.6",
         "postcss-cli": "^8.3.1",
         "rimraf": "^3.0.2",
-        "stylelint": "^14.0.1",
+        "stylelint": "^14.1.0",
         "stylelint-config-standard-scss": "^2.0.1",
-        "stylelint-scss": "^3.5.4"
+        "stylelint-scss": "^3.21.0"
     }
 }
