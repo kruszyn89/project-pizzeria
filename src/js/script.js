@@ -1,5 +1,6 @@
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
+//const { utils } = require("stylelint");
 
 {
   'use strict';
@@ -258,7 +259,7 @@
       // console.log('constructor arguments:', element);
 
       thisWidget.getElements(element);
-      thisWidget.setValue(thisWidget.input.value);
+      thisWidget.setValue(settings.amountWidget.defaultValue);
       thisWidget.initActions();      
     }
 
@@ -308,6 +309,27 @@
     }
   }
 
+  class Cart{
+    constructor(element){
+      
+      const thisCart = this;
+
+      thisCart.products = [];
+
+      thisCart.getElements(element);
+
+      console.log('new Cart:', thisCart);
+    }
+
+    getElements(element){
+      const thisCart = this;
+
+      thisCart.dom = {};
+
+      thisCart.dom.wrapper = element;
+    }
+  }
+
   const app = {
     initMenu: function() {
       const thisApp = this;
@@ -319,6 +341,13 @@
 
     },
     
+    initCart: function () {
+      const thisApp = this;
+
+      const cartElem = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElem);
+    },
+
     initData: function(){
       const thisApp = this;
 
@@ -336,6 +365,7 @@
 
       thisApp.initData();
       thisApp.initMenu();
+      thisApp.initCart();
     },
   };
 
