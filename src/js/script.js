@@ -102,12 +102,6 @@
       thisProduct.initAmountWidget();
       thisProduct.processOrder();
     }
-    
-    addToCart(){
-      const thisProduct = this;
-
-      app.cart.add(thisProduct);
-    }
 
     renderInMenu(){
     
@@ -253,7 +247,30 @@
       price *= thisProduct.amountWidget.value;
        
       // update calculated price in the HTML
+      thisProduct.priceSingle = price;
+      
       thisProduct.priceElem.innerHTML = price;
+    }
+
+    addToCart(){
+      const thisProduct = this;
+
+      app.cart.add(thisProduct);
+    }
+    
+    prepareCartProduct(){
+      
+      const thisProduct = this;
+
+      productSummary = {};
+
+      productSummary.id = thisProduct.id;
+      productSummary.name = thisProduct.data.name;
+      productSummary.amount = thisProduct.amountWidget.value;
+      productSummary.priceSingle = thisProduct.priceSingle;
+      productSummary.price = productSummary.priceSingle * productSummary.amount;
+
+      return productSummary;
     }
     
   }
@@ -365,20 +382,19 @@
       for (let productData in thisApp.data.products){
         new Product(productData, thisApp.data.products[productData]);
       }
-
     },
-    
+   
+    initData: function(){
+      const thisApp = this;
+
+      thisApp.data = dataSource;
+    },
+
     initCart: function () {
       const thisApp = this;
 
       const cartElem = document.querySelector(select.containerOf.cart);
       thisApp.cart = new Cart(cartElem);
-    },
-
-    initData: function(){
-      const thisApp = this;
-
-      thisApp.data = dataSource;
     },
 
     init: function(){
@@ -397,4 +413,5 @@
   };
 
   app.init();
+  app.initCart();
 }
