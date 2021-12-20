@@ -29,6 +29,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "babel-eslint": "^10.1.0",
         "yargs": "^17.3.0"
     },
     "devDependencies": {

@@ -262,17 +262,24 @@
       
       const thisProduct = this;
 
-      productSummary = {};
+      const productSummary = {};
 
       productSummary.id = thisProduct.id;
       productSummary.name = thisProduct.data.name;
       productSummary.amount = thisProduct.amountWidget.value;
       productSummary.priceSingle = thisProduct.priceSingle;
       productSummary.price = productSummary.priceSingle * productSummary.amount;
-
+      productSummary.params = thisProduct.prepareCartProductParams();
+     
       return productSummary;
+    
     }
     
+    prepareCartProductParams(){
+
+
+    }
+
   }
 
   class AmountWidget{
