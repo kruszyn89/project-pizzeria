@@ -153,7 +153,7 @@
 
           if (active !== thisProduct.element) {
 
-            active.classList.toggle(classNames.menuProduct.wrapperActive);
+            active.classList.remove(classNames.menuProduct.wrapperActive);
           }
         }
         /* toggle active class on thisProduct.element */
@@ -298,8 +298,6 @@
           if(optionSelected) {
             // option is selected!
             params[paramId].options[optionId] = option.label;
-            
-          
           }
         }
       }
@@ -454,5 +452,4 @@
   };
 
   app.init();
-  app.initCart();
 }
