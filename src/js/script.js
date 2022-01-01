@@ -216,7 +216,7 @@
           const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
           // setting the const in order to check if there is param with a name of paramId in formData and if it includes optionId
           const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
-          console.log();
+
 
           if(optionImage){
             if(optionSelected){
@@ -276,64 +276,35 @@
     
     }
     
-    prepareCartProductParams(){
+    prepareCartProductParams() {
       const thisProduct = this;
-
-      // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
+    
       const formData = utils.serializeFormToObject(thisProduct.form);
-      
-      // set price to default price
-      let price = thisProduct.data.price;
-
-      // for every category (param)...
+      const params = {};
+    
+      // for every category (param)
       for(let paramId in thisProduct.data.params) {
-        // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
         const param = thisProduct.data.params[paramId];
+        // create category param in params const eg. params = { ingredients: { name: 'Ingredients', options: {}}}
+        params[paramId] = {
+          label: param.label,
+          options: {}
+        };
         
         // for every option in this category
         for(let optionId in param.options) {
-          // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
-          // find image with class .paramId-optionId
-          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
-          // setting the const in order to check if there is param with a name of paramId in formData and if it includes optionId
-          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
-          console.log();
-
-          if(optionImage){
-            if(optionSelected){
-              optionImage.classList.add(classNames.menuProduct.wrapperActive);
-            }
-            else {
-              optionImage.classList.remove(classNames.menuProduct.wrapperActive);
-            }
-          }
-          // check if there is param with a name of paramId in formData and if it includes optionId 
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId); 
           if(optionSelected) {
-            // check if the option is not default
-            if(option.default !== true) {
-              // add option price to price variable
-              price += option.price;
-            }
-          } else {
-            // check if the option is default
-            if(option.default == true) {
-              // reduce price variable
-              price -= option.price;
-            }
+            // option is selected!
+            params[paramId].options[optionId] = option.label;
+            
+          
           }
         }
-
       }
-
-      /* Multiply price by amount */
-      price *= thisProduct.amountWidget.value;
-       
-      // update calculated price in the HTML
-      thisProduct.priceSingle = price;
-      
-      thisProduct.priceElem.innerHTML = price;
-    }
+    
+      return params;
     }
 
   }
@@ -415,6 +386,7 @@
 
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
     
     }
 
@@ -427,12 +399,18 @@
       });
 
     }
-
+   
     add(menuProduct){
-      // const thisCart = this;
+      const thisCart = this;
 
-      console.log('adding product', menuProduct);
+      /* generate HTML based on template */
+      const generatedHTML = templates.cartProduct(menuProduct);
 
+      /* create element using utils.createElementFromHTML */
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+  
+      /* find menu container */
+      thisCart.dom.productList.appendChild(generatedDOM);
     }
 
   }
