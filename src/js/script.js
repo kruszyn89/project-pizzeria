@@ -400,7 +400,7 @@
    
     add(menuProduct){
       const thisCart = this;
-
+console.log('adding product:', menuProduct);
       /* generate HTML based on template */
       const generatedHTML = templates.cartProduct(menuProduct);
 
@@ -409,6 +409,40 @@
   
       /* find menu container */
       thisCart.dom.productList.appendChild(generatedDOM);
+      
+      thisCart.products.push(menuProduct);
+    }
+
+  }
+
+  class CartProduct{
+    
+    constructor(menuProduct, element) {
+    
+      const thisCartProduct = this;
+
+      thisCartProduct.id = menuProduct.Id;
+      thisCartProduct.amount = menuProduct.amount;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
+      thisCartProduct.price = menuProduct.price;
+
+      thisCartProduct.getElements(element);
+      
+    }
+    
+    getElements(element){  
+      
+      const thisCartProduct = this;
+
+      thisCartProduct.dom = {};
+    
+      thisCartProduct.dom.wrapper = element;
+
+      thisCartProduct.dom.amountWidget = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.remove);
+    
     }
 
   }
@@ -416,7 +450,7 @@
   const app = {
     initMenu: function() {
       const thisApp = this;
-      //console.log('thisApp.data:', thisApp.data);
+      // console.log('thisApp.data:', thisApp.data);
 
       for (let productData in thisApp.data.products){
         new Product(productData, thisApp.data.products[productData]);
