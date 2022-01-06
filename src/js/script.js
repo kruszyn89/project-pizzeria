@@ -39,7 +39,8 @@
       productList: '.cart__order-summary',
       toggleTrigger: '.cart__summary',
       totalNumber: `.cart__total-number`,
-      totalPrice: '.cart__total-price strong, .cart__order-total .cart__order-price-sum strong',
+      totalPrice: '.cart__total-price strong',
+      totalPriceBottom: '.cart__order-total .cart__order-price-sum strong',
       subtotalPrice: '.cart__order-subtotal .cart__order-price-sum strong',
       deliveryFee: '.cart__order-delivery .cart__order-price-sum strong',
       form: '.cart__order',
@@ -326,7 +327,9 @@
     announce(){
       const thisWidget = this;
 
-      const event = new Event ('updated');
+      const event = new CustomEvent('updated',{
+        bubbles: true
+      });
       thisWidget.element.dispatchEvent(event);
     }
     
@@ -381,7 +384,8 @@
       thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
       thisCart.dom.deliveryFee = thisCart.dom.wrapper.querySelector(select.cart.deliveryFee);
       thisCart.dom.subtotalPrice = thisCart.dom.wrapper.querySelector(select.cart.subtotalPrice);
-      thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelectorAll(select.cart.totalPrice);
+      thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelector(select.cart.totalPrice);
+      thisCart.dom.totalPriceBottom = thisCart.dom.wrapper.querySelector(select.cart.totalPriceBottom); 
       thisCart.dom.totalNumber = thisCart.dom.wrapper.querySelector(select.cart.totalNumber);
     }
 
@@ -392,6 +396,13 @@
       thisCart.dom.toggleTrigger.addEventListener('click', function () {
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
+      thisCart.dom.productList.addEventListener('click', function() {
+        thisCart.update();
+      });
+      thisCart.dom.productList.addEventListener('remove', function(event) {
+        thisCart.remove(event.detail.cartProduct);
+      });
+      
     }
    
     add(menuProduct){
@@ -415,7 +426,7 @@
       const deliveryFee = settings.cart.defaultDeliveryFee;
 
       let totalNumber = 0; // represents total quantity
-      let subtotalPrice = 0; // epresents sum of all products without delivery fee
+      let subtotalPrice = 0; // represents sum of all products without delivery fee
 
       for (let product of thisCart.products) {
         totalNumber += product.amount;
@@ -432,7 +443,14 @@
         thisCart.dom.totalPrice.innerHTML = thisCart.totalPrice;
         thisCart.dom.totalPriceBottom.innerHTML = thisCart.totalPrice;
       }
-      console.log('total', thisCart);
+    }
+
+    remove (cartProduct){
+      const thisCart = this;
+
+      thisCart.products.splice(thisCart.products.indexOf(cartProduct), 1);
+      thisCart.update();
+      cartProduct.dom.wrapper.remove();
     }
   }
 
@@ -449,6 +467,7 @@
 
       thisCartProduct.getElements(element);
       thisCartProduct.initAmountWidget();
+      thisCartProduct.initActions();
     }
     
     getElements(element){  
@@ -472,6 +491,32 @@
       thisCartProduct.dom.amountWidget.addEventListener('updated', function(){
         thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amountWidget.value;
         thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
+      });
+    }
+
+    remove(){
+      const thisCartProduct = this;
+
+      const event = new CustomEvent('remove', {
+        bubbles: true,
+        detail: {
+          cartProduct: thisCartProduct,
+        },
+      });
+      
+      thisCartProduct.dom.wrapper.dispatchEvent(event);
+    }
+
+    initActions(){
+      const thisCartProduct = this;
+
+      thisCartProduct.dom.edit.addEventListener('click', function (event){
+        event.preventDefault();
+      });
+
+      thisCartProduct.dom.remove.addEventListener('click', function (event){
+        event.preventDefault();
+        thisCartProduct.remove();
       });
     }
   }
