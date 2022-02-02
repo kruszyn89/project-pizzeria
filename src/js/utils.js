@@ -9,7 +9,6 @@ utils.createDOMFromHTML = function(htmlString) {
 };
 
 utils.createPropIfUndefined = function(obj, key, value = []){
-  // eslint-disable-next-line no-prototype-builtins
   if(!obj.hasOwnProperty(key)){
     obj[key] = value;
   }
@@ -41,6 +40,7 @@ utils.convertDataSourceToDbJson = function(){
   const productJson = [];
   for(let key in dataSource.products){
     productJson.push(Object.assign({id: key}, dataSource.products[key]));
+    console.log(key);
   }
 
   console.log(JSON.stringify({product: productJson, order: []}, null, '  '));
