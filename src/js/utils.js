@@ -1,6 +1,8 @@
 /* global dataSource */
 
-const utils = {}; // eslint-disable-line no-unused-vars
+import app from './app.js';
+
+const utils = {};
 
 utils.createDOMFromHTML = function(htmlString) {
   let div = document.createElement('div');
@@ -38,7 +40,7 @@ utils.serializeFormToObject = function(form){
 
 utils.convertDataSourceToDbJson = function(){
   const productJson = [];
-  for(let key in dataSource.products){
+  for(let key in app.data.products){
     productJson.push(Object.assign({id: key}, dataSource.products[key]));
     console.log(key);
   }
