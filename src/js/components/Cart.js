@@ -105,6 +105,7 @@ class Cart{
     let subtotalPrice = 0; // represents sum of all products without delivery fee
 
     for (let product of thisCart.products) {
+      console.log(product);
       totalNumber += product.amount;
       subtotalPrice += product.price;
     }

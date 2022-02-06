@@ -170,7 +170,7 @@ class Product{
     const event = new CustomEvent('add-to-cart', {
       bubbles: true, 
       detail: {
-        product: thisProduct,
+        product: thisProduct.prepareCartProduct(),
       },
     });
 
@@ -211,9 +211,8 @@ class Product{
       // for every option in this category
       for(let optionId in param.options) {
         const option = param.options[optionId];
-        const optionSelected = formData[paramId] && formData[paramId].includes(optionId); 
-        if(optionSelected) {
-          // option is selected!
+        /* add label to product params if option was chosen */
+        if (formData[paramId].includes(optionId)) {
           params[paramId].options[optionId] = option.label;
         }
       }
