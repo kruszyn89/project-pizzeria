@@ -1,5 +1,7 @@
 import { templates, select } from '../settings.js';
 import AmountWidget from './AmountWidget.js';
+import DatePicker from './DatePicker.js';
+import HourPicker from './HourPicker.js';
 
 class Booking {
 
@@ -11,7 +13,7 @@ class Booking {
   }
 
   render (element){
-    const thisBooking = this;
+    const thisBooking = this;  
     const generatedHTML = templates.bookingWidget(element);
 
     thisBooking.dom = {};
@@ -20,6 +22,9 @@ class Booking {
 
     thisBooking.dom.peopleAmount = element.querySelector(select.booking.peopleAmount);
     thisBooking.dom.hoursAmount = element.querySelector(select.booking.hoursAmount);
+
+    thisBooking.dom.datePicker = element.querySelector(select.widgets.datePicker.wrapper);
+    thisBooking.dom.hourPicker = element.querySelector(select.widgets.hourPicker.wrapper);
   }
 
   initWidgets (){
@@ -34,6 +39,18 @@ class Booking {
     thisBooking.dom.hoursAmount.addEventListener('click', function(){
 
     });
+
+    thisBooking.datePicker = new DatePicker(thisBooking.dom.datePicker);
+    thisBooking.dom.datePicker.addEventListener('click', function(){
+
+    });
+
+    //skonczylem na tym, punkt Po drugie, w metodzie initWidgets zadbaj o to, aby uruchomić na obu elementach odpowiednie widgety.
+    thisBooking.hourPicker = new HourPicker(thisBooking.dom.hourPicker);
+    thisBooking.dom.hourPicker.addEventListener('click', function(){
+      
+    });
+
 
   }
 }
